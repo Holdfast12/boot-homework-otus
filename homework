@@ -1,0 +1,46 @@
+1. Попасть в систему без пароля несколькими способами.
+
+
+1.1 init=/bin/sh
+пробовал на almalinux8, centos7 вообще не доходит до консоли
+прописываю в параметрах загрузки ядра init=/bin/sh и гружусь
+перемонтирую корень на запись mount -o remount,rw /
+задаю пароль рута passwd
+перемонтирую корень на только чтение mount -o remount,ro /
+команды на перезагрузку просто нет - перезагружаю хардресетом
+под рутом с новым паролем не зайти
+
+
+1.2 rd.break
+загрузился с прописанным параметрами загрузки ядра rw rd.break и попал в emergency mode
+сменил корневой каталог chroot /sysroot
+сменил пароль рута passwd root
+оставил файл последующей перемаркировки силинуксом touch /.autorelabel
+перезагрузился
+зашел под рутом с новым паролем
+
+1.3 rw init=/sysroot/bin/sh
+не работает ровно таким же образом как и первый способ
+
+2.
+[root@localhost ~]# vgs
+  VG         #PV #LV #SN Attr   VSize   VFree
+  VolGroup00   1   2   0 wz--n- <38.97g    0 
+[root@localhost ~]# vgrename VolGroup00 OtusRoot
+  Volume group "VolGroup00" successfully renamed to "OtusRoot"
+
+[root@localhost ~]# sed -i 's/VolGroup00/OtusRoot/g' /etc/fstab
+[root@localhost ~]# sed -i 's/VolGroup00/OtusRoot/g' /etc/default/grub
+[root@localhost ~]# sed -i 's/VolGroup00/OtusRoot/g' /boot/grub2/grub.cfg
+yum install -y wget
+yum install busybox cryptsetup dmraid ntfs-3 mdadm multipath
+
+пересоздаем initrd image под новое название VG
+[root@localhost ~]# mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
+[root@localhost ~]# 
+[root@localhost ~]# 
+[root@localhost ~]# 
+[root@localhost ~]# 
+[root@localhost ~]# 
+[root@localhost ~]# 
+
