@@ -32,9 +32,11 @@
 [root@localhost ~]# sed -i 's/VolGroup00/OtusRoot/g' /etc/fstab
 [root@localhost ~]# sed -i 's/VolGroup00/OtusRoot/g' /etc/default/grub
 [root@localhost ~]# sed -i 's/VolGroup00/OtusRoot/g' /boot/grub2/grub.cfg
-yum install -y wget
-yum install busybox cryptsetup dmraid ntfs-3 mdadm multipath
-
+yum install -y wget epel-release
+wget --no-check-certificate https://busybox.net/downloads/binaries/1.28.1-defconfig-multiarch/busybox-x86_64
+cp busybox-x86_64 /bin/busybox
+chmod +x /bin/busybox
+yum install cryptsetup dmraid ntfs-3g mdadm device-mapper-multipath plymouth lvm2
 пересоздаем initrd image под новое название VG
 [root@localhost ~]# mkinitrd -f -v /boot/initramfs-$(uname -r).img $(uname -r)
 [root@localhost ~]# 
